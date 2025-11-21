@@ -63,13 +63,14 @@ std::wstring RouteCipher::getKey() const {
 std::wstring RouteCipher::encrypt(const std::wstring& text) {
     std::wstring clean_text = getValidOpenText(text);
     
-    int rows = (clean_text.length() + columns - 1) / columns;
+    std::size_t text_length = clean_text.length();
+    std::size_t rows = (text_length + columns - 1) / columns;
     std::wstring result;
     
     for (int col = columns - 1; col >= 0; col--) {
-        for (int row = 0; row < rows; row++) {
-            int pos = row * columns + col;
-            if (pos < clean_text.length()) {
+        for (std::size_t row = 0; row < rows; row++) {
+            std::size_t pos = row * columns + col;
+            if (pos < text_length) {
                 result += clean_text[pos];
             }
         }
@@ -80,14 +81,15 @@ std::wstring RouteCipher::encrypt(const std::wstring& text) {
 std::wstring RouteCipher::decrypt(const std::wstring& text) {
     std::wstring clean_text = getValidCipherText(text);
    
-    int rows = (clean_text.length() + columns - 1) / columns;
-    std::wstring result(clean_text.length(), L' ');
-    int index = 0;
+    std::size_t text_length = clean_text.length();
+    std::size_t rows = (text_length + columns - 1) / columns;
+    std::wstring result(text_length, L' ');
+    std::size_t index = 0;
 
     for (int col = columns - 1; col >= 0; col--) {
-        for (int row = 0; row < rows; row++) {
-            int pos = row * columns + col;
-            if (pos < clean_text.length() && index < clean_text.length()) {
+        for (std::size_t row = 0; row < rows; row++) {
+            std::size_t pos = row * columns + col;
+            if (pos < text_length && index < text_length) {
                 result[pos] = clean_text[index++];
             }
         }
